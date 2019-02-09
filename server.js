@@ -1,3 +1,5 @@
+import db from './db/db.js';
+
 const path = require('path');
 const express = require('express');
 const app = express();
@@ -7,6 +9,15 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 app.get('/', function(request, response) {
   response.sendFile(__dirname + '/dist/index.html');
+});
+
+// get all todos
+app.get('/api/todos', (req, res) => {
+  res.status(200).send({
+    success: 'true',
+    message: 'todos retrieved successfully',
+    todos: db
+  })
 });
 
 app.listen(PORT, error => (

@@ -18,53 +18,45 @@ function packageQuery(name, owner) {
   `;
 }
 
-class App extends Component {
-	state = {
-		owner: 'sendgrid',
-		repo: '',
-		dependencies: {}
-	};
+	const API = 'http://localhost:8080/api/todos/';
 
-	handleChange = (e) => {
-		const { id, value } = e.target;
-		return this.setState({ [id]: value });
-	};
+	class TodoD extends Component {
+		constructor(props) {
+    	super(props);
 
-	handleSubmit = async (e) => {
-		e.preventDefault();
-		const response = await this.props.client.query({
-			query: packageQuery(this.state.repo, this.state.owner)
-		});
-		const { repository } = response.data;
-		const parsed = JSON.parse(repository.object.text);
-		return this.setState({ dependencies: parsed.dependencies });
-	};
+				this.state = {
+      		hits: [],
+    		};
+			}
+
+				componentDidMount() {
+					fetch('API')
+						.then(response => response.json())
+				    .then(data => this.setState({ hits: data.hits }));
+				   }
 
 	render() {
+		const { hits } = this.state;
+
 		return (
-			<div>
-				<h1>dep-check</h1>
+			<div className="todoListMain">
 				<form onSubmit={this.handleSubmit}>
-					<div>
-						<label htmlFor="owner">owner</label>
-						<input id="owner" onChange={this.handleChange} type="text" value={this.state.owner} />
-					</div>
-					<div>
-						<label htmlFor="repo">repo</label>
-						<input id="repo" onChange={this.handleChange} type="text" value={this.state.repo} />
-						<button type="submit">search</button>
-					</div>
+				<input ref={(a) => this._inputElement = a}
+								placeholder="Enter Task">
+				</input>
+						<button type="submit">Add</button>
 				</form>
 				<ul>
-					{Object.keys(this.state.dependencies).map((dep, i) => (
-						<li key={i}>
-							{dep}: {this.state.dependencies[dep]}
-						</li>
-					))}
-				</ul>
+			     {hits.map(hit =>
+			       <li key={hit.id}>
+	             <a href={hit.title}>{hit.description}</a>
+		         </li>
+			      )}
+			   </ul>
 			</div>
 		);
 	}
 }
 
-export default withApollo(App);
+
+export default withApollo(TodoD);

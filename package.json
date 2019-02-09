@@ -9,7 +9,7 @@
     "lint": "eslint src/**",
     "lint:watch": "esw -w src/**",
     "review": "npm run lint && npm test",
-    "start": "npm run build && NODE_ENV=production node server.js",
+    "start": "npm run build && node server.js",
     "test": "jest src/**",
     "test:watch": "jest src/** --watch",
     "test:watchAll": "jest src/** --watchAll",
@@ -40,6 +40,7 @@
     "react": "^16.5.0",
     "react-apollo": "^2.1.11",
     "react-dom": "^16.5.0",
+    "react-flip-move": "^3.0.3",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
     "webpack": "^3.6.0"
@@ -83,5 +84,13 @@
     "setupFiles": [
       "raf/polyfill"
     ]
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alanbsmith/react-node-example.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alanbsmith/react-node-example/issues"
+  },
+  "homepage": "https://github.com/alanbsmith/react-node-example#readme"
 }
