@@ -1,22 +1,8 @@
 import React, { Component } from 'react';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
-
+import TodoItems from "./TodoItems";
 import 'src/assets/stylesheets/base.scss';
-
-function packageQuery(name, owner) {
-	return gql`
-    query {
-      repository(name: "${name}", owner: "${owner}") {
-        object(expression: "master:package.json") {
-          ... on Blob {
-            text
-          }
-        }
-      }
-    }
-  `;
-}
 
 	const API = 'http://localhost:8080/api/todos/';
 
@@ -25,34 +11,68 @@ function packageQuery(name, owner) {
     	super(props);
 
 				this.state = {
-      		hits: [],
+      		items: [],
     		};
+
+				this.addItem = this.addItem.bind(this);
+		    this.deleteItem = this.deleteItem.bind(this);
+
 			}
 
-				componentDidMount() {
-					fetch('API')
-						.then(response => response.json())
-				    .then(data => this.setState({ hits: data.hits }));
-				   }
+	componentDidMount() {
+		fetch('API')
+			.then(response => response.json())
+		  .then(data => this.setState({ items: data.items }));
+	 }
+
+	 addItem(e) {
+     if (this._inputElement.value !== "") {
+       const newItem = {
+         text: this._inputElement.value,
+         key: Date.now()
+       };
+
+       this.setState((prevState) => {
+         return {
+           items: prevState.items.concat(newItem)
+         };
+       });
+     }
+
+     this._inputElement.value = "";
+
+     console.log(this.state.items);
+
+     e.preventDefault();
+   }
+
+   deleteItem(key) {
+     console.log("Key in deleteItem: " + key);
+     console.log("Items at delete: " + this.state.Items);
+     const filteredItems = this.state.items.filter(function (item) {
+       return (item.key !== key)
+     });
+
+     this.setState({
+       items: filteredItems
+     });
+   }
 
 	render() {
-		const { hits } = this.state;
+		const { items } = this.state;
 
 		return (
 			<div className="todoListMain">
+				<div className="header">
 				<form onSubmit={this.handleSubmit}>
 				<input ref={(a) => this._inputElement = a}
 								placeholder="Enter Task">
 				</input>
 						<button type="submit">Add</button>
 				</form>
-				<ul>
-			     {hits.map(hit =>
-			       <li key={hit.id}>
-	             <a href={hit.title}>{hit.description}</a>
-		         </li>
-			      )}
-			   </ul>
+				</div>
+				<TodoItems entries={this.state.items}
+                  delete={this.deleteItem}/>
 			</div>
 		);
 	}

@@ -9,14 +9,14 @@ body {
   justify-content: flex;
 }
 
-.todoListMain input {
+.todoListMain .header input {
   padding: 10px;
   font-size: 16px;
   border: 2px solid #fff;
   width: 165px;
 }
 
-.todoListMain button {
+.todoListMain .header button {
   padding: 10px;
   font-size: 16px;
   margin: 10px;
